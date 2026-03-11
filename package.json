@@ -1,0 +1,30 @@
+{
+  "name": "demonz-ripper",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DemonZ Ripper — Fab.com & WebGL 3D Model Ripper",
+  "workspaces": [
+    "packages/*",
+    "services/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:ripper": "npm run dev --workspace=apps/ripper-ui",
+    "dev:rip-orchestrator": "npm run dev --workspace=services/rip-orchestrator",
+    "build": "npm run build --workspaces",
+    "lint": "eslint . --ext .ts,.tsx",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.0",
+    "turbo": "^1.12.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
