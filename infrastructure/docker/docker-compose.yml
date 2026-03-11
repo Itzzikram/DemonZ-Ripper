@@ -1,0 +1,43 @@
+services:
+  # ── Rip Orchestrator (Backend API) ──
+  rip-orchestrator:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.orchestrator
+    restart: unless-stopped
+    ports:
+      - "4010:4010"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - rip-output:/app/rip-output
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 3G
+        reservations:
+          cpus: '1'
+          memory: 2G
+
+  # ── Ripper UI (Frontend) ──
+  ripper-ui:
+    build:
+      context: ../..
+      dockerfile: infrastructure/docker/Dockerfile.ui
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - rip-orchestrator
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+volumes:
+  rip-output:

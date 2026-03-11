@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rip-orchestrator
+  labels:
+    app: rip-orchestrator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rip-orchestrator
+  template:
+    metadata:
+      labels:
+        app: rip-orchestrator
+    spec:
+      containers:
+        - name: rip-orchestrator
+          image: demonz-ripper/rip-orchestrator:latest
+          ports:
+            - containerPort: 4010
+          env:
+            - name: NODE_ENV
+              value: production
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 4010
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 4010
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 2
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "2000m"
+          volumeMounts:
+            - name: rip-output
+              mountPath: /app/rip-output
+      volumes:
+        - name: rip-output
+          emptyDir:
+            sizeLimit: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rip-orchestrator
+spec:
+  selector:
+    app: rip-orchestrator
+  ports:
+    - port: 4010
+      targetPort: 4010
