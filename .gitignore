@@ -1,0 +1,13 @@
+node_modules/
+dist/
+build/
+.env
+.env.local
+*.log
+.turbo/
+.cache/
+coverage/
+*.tsbuildinfo
+.vs/
+*.zip
+rip-output/
